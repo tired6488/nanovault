@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
   };
   wallet = this.walletService.wallet;
   node = this.nodeService.node;
-  nanoPrice = this.price.price;
+  trollarPrice = this.price.price;
   fiatTimeout = 5 * 60 * 1000; // Update fiat prices every 5 minutes
   inactiveSeconds = 0;
   windowHeight = 1000;
@@ -50,8 +50,8 @@ export class AppComponent implements OnInit {
     this.windowHeight = window.innerHeight;
     this.settings.loadAppSettings();
 
-    // New for v19: Patch saved xrb_ prefixes to nano_
-    await this.patchXrbToNanoPrefixData();
+    // New for v19: Patch saved ttk_ prefixes to troll_
+    await this.patchTtkToTrollPrefixData();
 
     this.addressBook.loadAddressBook();
     this.workPool.loadWorkCache();
@@ -81,11 +81,11 @@ export class AppComponent implements OnInit {
       this.walletService.lockWallet();
     });
 
-    // Listen for an xrb: protocol link, triggered by the desktop application
+    // Listen for an troll: protocol link, triggered by the desktop application
     window.addEventListener('protocol-load', (e: CustomEvent) => {
       const protocolText = e.detail;
-      const stripped = protocolText.split('').splice(4).join(''); // Remove xrb:
-      if (stripped.startsWith('xrb_')) {
+      const stripped = protocolText.split('').splice(4).join(''); // Remove troll:
+      if (stripped.startsWith('troll_')) {
         this.router.navigate(['account', stripped]);
       }
       // Soon: Load seed, automatic send page?
@@ -107,22 +107,22 @@ export class AppComponent implements OnInit {
     try {
       await this.updateFiatPrices();
     } catch (err) {
-      this.notifications.sendWarning(`There was an issue retrieving latest Nano price.  Ensure your AdBlocker is disabled on this page then reload to see accurate FIAT values.`, { length: 0, identifier: `price-adblock` });
+      this.notifications.sendWarning(`There was an issue retrieving latest Trollar price.  Ensure your AdBlocker is disabled on this page then reload to see accurate FIAT values.`, { length: 0, identifier: `price-adblock` });
     }
 
   }
 
   /*
-    This is important as it looks through saved data using hardcoded xrb_ prefixes
-    (Your wallet, address book, rep list, etc) and updates them to nano_ prefix for v19 RPC
+    This is important as it looks through saved data using hardcoded troll_ prefixes
+    (Your wallet, address book, rep list, etc) and updates them to troll_ prefix for v19 RPC
    */
-  async patchXrbToNanoPrefixData() {
+  async patchTtkToTrollPrefixData() {
     // If wallet is version 2, data has already been patched.  Otherwise, patch all data
     if (this.settings.settings.walletVersion >= 2) return;
 
-    await this.walletService.patchOldSavedData(); // Change saved xrb_ addresses to nano_
-    this.addressBook.patchXrbPrefixData();
-    this.representative.patchXrbPrefixData();
+    await this.walletService.patchOldSavedData(); // Change saved ttk_ addresses to troll_
+    this.addressBook.patchTtkPrefixData();
+    this.representative.patchTtkPrefixData();
 
     this.settings.setAppSetting('walletVersion', 2); // Update wallet version so we do not patch in the future.
   }
@@ -138,12 +138,12 @@ export class AppComponent implements OnInit {
     const searchData = this.searchData.trim();
     if (!searchData.length) return;
 
-    if (searchData.startsWith('xrb_') || searchData.startsWith('nano_')) {
+    if (searchData.startsWith('ttk_') || searchData.startsWith('troll_')) {
       this.router.navigate(['account', searchData]);
     } else if (searchData.length === 64) {
       this.router.navigate(['transaction', searchData]);
     } else {
-      this.notifications.sendWarning(`Invalid Nano account or transaction hash!`)
+      this.notifications.sendWarning(`Invalid Trollar account or transaction hash!`)
     }
     this.searchData = '';
   }
@@ -154,7 +154,7 @@ export class AppComponent implements OnInit {
 
   retryConnection() {
     this.walletService.reloadBalances(true);
-    this.notifications.sendInfo(`Attempting to reconnect to Nano node`);
+    this.notifications.sendInfo(`Attempting to reconnect to Trollar node`);
   }
 
   async updateFiatPrices() {

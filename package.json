@@ -1,8 +1,8 @@
 {
-  "name": "NanoVault",
+  "name": "TrollarVault",
   "version": "1.2.1",
   "license": "MIT",
-  "description": "Wallet for interacting with Nano",
+  "description": "Wallet for interacting with Trollar",
   "author": "Andrew Steele",
   "main": "desktop-app/dist/desktop-app.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "desktop:full": "electron-builder -wml --x64",
     "desktop:publish": "build -wml --x64 -p always",
 
-    "server:copy-wallet": "cd .. && rm -rf nanovault-server/static && cp -R nanovault/dist nanovault-server/static"
+    "server:copy-wallet": "cd .. && rm -rf trollarvault-server/static && cp -R trollarvault/dist trollarvault-server/static"
   },
   "private": true,
   "dependencies": {
@@ -57,7 +57,7 @@
     "crypto": "^1.0.1",
     "crypto-js": "^3.1.9-1",
     "electron-updater": "^2.21.0",
-    "hw-app-nano": "^1.0.0",
+    "hw-app-trollar": "^1.0.0",
     "ngx-clipboard": "^9.1.2",
     "node-hid": "^0.7.3",
     "qrcode": "^1.2.0",
@@ -92,9 +92,9 @@
     "uikit": "^3.0.0-beta.40"
   },
   "build": {
-    "appId": "com.electron.nanovault",
+    "appId": "com.electron.trollarvault",
     "buildVersion": "1.2.1",
-    "productName": "NanoVault",
+    "productName": "TrollarVault",
     "copyright": "Copyright © 2019 Andrew Steele",
     "directories": {
       "output": "desktop-app/build",
@@ -121,7 +121,7 @@
       {
         "provider": "github",
         "owner": "cronoh",
-        "repo": "nanovault"
+        "repo": "trollarvault"
       }
     ],
     "protocols": {

@@ -206,7 +206,7 @@ function generateAccountKeyPair(accountSecretKeyBytes) {
   return nacl.sign.keyPair.fromSecretKey(accountSecretKeyBytes);
 }
 
-function getPublicAccountID(accountPublicKeyBytes, prefix = 'nano') {
+function getPublicAccountID(accountPublicKeyBytes, prefix = 'troll') {
   const accountHex = util.uint8.toHex(accountPublicKeyBytes);
   const keyBytes = util.uint4.toUint8(util.hex.toUint4(accountHex)); // For some reason here we go from u, to hex, to 4, to 8??
   const checksum = util.uint5.toString(util.uint4.toUint5(util.uint8.toUint4(blake.blake2b(keyBytes, null, 5).reverse())));
@@ -217,11 +217,11 @@ function getPublicAccountID(accountPublicKeyBytes, prefix = 'nano') {
 
 function getAccountPublicKey(account) {
   if (account.length == 64) {
-    if(!account.startsWith('xrb_1') && !account.startsWith('xrb_3')) {
+    if(!account.startsWith('ttk_1') && !account.startsWith('ttk_3')) {
       throw new Error(`Invalid NANO Account`);
     }
   } else if (account.length == 65) {
-    if(!account.startsWith('nano_1') && !account.startsWith('nano_3')) {
+    if(!account.startsWith('troll_1') && !account.startsWith('troll_3')) {
       throw new Error(`Invalid NANO Account`);
     }
   } else {
@@ -241,11 +241,11 @@ function getAccountPublicKey(account) {
   return uint4ToHex(key_uint4);
 }
 
-function setPrefix(account, prefix = 'xrb') {
-  if (prefix === 'nano') {
-    return account.replace('xrb_', 'nano_');
+function setPrefix(account, prefix = 'ttk') {
+  if (prefix === 'troll') {
+    return account.replace('ttk_', 'troll_');
   } else {
-    return account.replace('nano_', 'xrb_');
+    return account.replace('troll_', 'ttk_');
   }
 }
 

@@ -66,7 +66,7 @@ export interface WalletApiAccount extends BaseApiAccount {
 @Injectable()
 export class WalletService {
   nano = 1000000000000000000000000;
-  storeKey = `nanovault-wallet`;
+  storeKey = `trollarvault-wallet`;
 
   wallet: FullWallet = {
     type: 'seed',
@@ -300,7 +300,7 @@ export class WalletService {
     const exportData = this.generateExportData();
     const base64Data = btoa(JSON.stringify(exportData));
 
-    return `https://nanovault.io/import-wallet#${base64Data}`;
+    return `https://vault.trollar.life/import-wallet#${base64Data}`;
   }
 
   lockWallet() {

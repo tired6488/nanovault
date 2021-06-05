@@ -23,7 +23,7 @@ interface AppSettings {
 
 @Injectable()
 export class AppSettingsService {
-  storeKey = `nanovault-appsettings`;
+  storeKey = `trollarvault-appsettings`;
 
   settings: AppSettings = {
     displayDenomination: 'mnano',
