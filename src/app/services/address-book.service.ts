@@ -10,7 +10,7 @@ interface AddressBookEntry {
 
 @Injectable()
 export class AddressBookService {
-  storeKey = `nanovault-addressbook`;
+  storeKey = `trollarvault-addressbook`;
 
   addressBook: AddressBookEntry[] = [];
 
@@ -30,15 +30,15 @@ export class AddressBookService {
     return this.addressBook;
   }
 
-  patchXrbPrefixData() {
+  patchTtkPrefixData() {
     const addressBookStore = localStorage.getItem(this.storeKey);
     if (!addressBookStore) return;
 
     const addressBook = JSON.parse(addressBookStore);
 
     const newAddressBook = addressBook.map(entry => {
-      if (entry.account.indexOf('xrb_') !== -1) {
-        entry.account = entry.account.replace('xrb_', 'nano_');
+      if (entry.account.indexOf('ttk_') !== -1) {
+        entry.account = entry.account.replace('ttk_', 'troll_');
       }
       return entry;
     });

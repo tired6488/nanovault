@@ -20,7 +20,7 @@
     </div>
     <div class="uk-modal-body">
       <div class="uk-alert-primary uk-text-center" uk-alert>
-        Your representatives vote on transactions on your behalf to secure the Nano network.<br>
+        Your representatives vote on transactions on your behalf to secure the Trollar network.<br>
         By changing the representatives below, you will help decentralize the network
       </div>
 
@@ -42,7 +42,7 @@
                     <span *ngIf="account.addressBookName" class="uk-margin-small-right uk-label uk-label-default">{{ account.addressBookName }}</span>
                     {{ account.id | squeeze }}
                   </td>
-                  <td class="uk-width-1-4">{{ account.balance | rai:'mnano' }}</td>
+                  <td class="uk-width-1-4">{{ account.balance | rai:'mtrollar' }}</td>
                 </tr>
               </tbody>
             </table>
