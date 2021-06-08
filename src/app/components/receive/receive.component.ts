@@ -8,7 +8,7 @@ import BigNumber from "bignumber.js";
 import {UtilService} from "../../services/util.service";
 import {WorkPoolService} from "../../services/work-pool.service";
 import {AppSettingsService} from "../../services/app-settings.service";
-import {NanoBlockService} from "../../services/nano-block.service";
+import {TrollarBlockService} from "../../services/trollar-block.service";
 const nacl = window['nacl'];
 
 @Component({
@@ -29,7 +29,7 @@ export class ReceiveComponent implements OnInit {
     private api: ApiService,
     private workPool: WorkPoolService,
     public settings: AppSettingsService,
-    private nanoBlock: NanoBlockService,
+    private trollarBlock: TrollarBlockService,
     private util: UtilService) { }
 
   async ngOnInit() {
@@ -41,7 +41,7 @@ export class ReceiveComponent implements OnInit {
 
     let pending;
     if (this.settings.settings.minimumReceive) {
-      const minAmount = this.util.nano.mnanoToRaw(this.settings.settings.minimumReceive);
+      const minAmount = this.util.trollar.mtrollarToRaw(this.settings.settings.minimumReceive);
       pending = await this.api.accountsPendingLimit(this.accounts.map(a => a.id), minAmount.toString(10));
     } else {
       pending = await this.api.accountsPending(this.accounts.map(a => a.id));
@@ -82,7 +82,7 @@ export class ReceiveComponent implements OnInit {
 
     let pending;
     if (this.settings.settings.minimumReceive) {
-      const minAmount = this.util.nano.mnanoToRaw(this.settings.settings.minimumReceive);
+      const minAmount = this.util.trollar.mtrollarToRaw(this.settings.settings.minimumReceive);
       pending = await this.api.pendingLimit(account, 50, minAmount.toString(10));
     } else {
       pending = await this.api.pending(account, 50);
@@ -117,10 +117,10 @@ export class ReceiveComponent implements OnInit {
     if (this.walletService.walletIsLocked()) return this.notificationService.sendWarning(`Wallet must be unlocked`);
     pendingBlock.loading = true;
 
-    const newBlock = await this.nanoBlock.generateReceive(walletAccount, sourceBlock, this.walletService.isLedgerWallet());
+    const newBlock = await this.trollarBlock.generateReceive(walletAccount, sourceBlock, this.walletService.isLedgerWallet());
 
     if (newBlock) {
-      this.notificationService.sendSuccess(`Successfully received Nano!`);
+      this.notificationService.sendSuccess(`Successfully received Trollar!`);
     } else {
       if (!this.walletService.isLedgerWallet()) {
         this.notificationService.sendError(`There was an error receiving the transaction`)

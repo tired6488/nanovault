@@ -107,8 +107,8 @@ export class RepresentativeService {
       const repOnline = onlineReps.indexOf(representative.account) !== -1;
       const knownRep = this.getRepresentative(representative.account);
 
-      const nanoWeight = this.util.nano.rawToMnano(representative.weight || 0);
-      const percent = nanoWeight.div(totalSupply).times(100);
+      const trollarWeight = this.util.trollar.rawToMtrollar(representative.weight || 0);
+      const percent = trollarWeight.div(totalSupply).times(100);
 
       const repStatus: RepresentativeStatus = {
         online: repOnline,
@@ -320,10 +320,10 @@ export class RepresentativeService {
     return weightedReps.sort((a, b) => b.weight - a.weight);
   }
 
-  // Default representatives list
+ // Default representatives list
   defaultRepresentatives = [
     {
-      id: 'ttk_3rw4un6ys57hrb39sy1qx8qy5wukst1iiponztrz9qiz6qqa55kxzx4491or',
+      id: 'ttk_3tiredai3yn1nkwu6aepuncgsmm1chy8pmy1ohdokr5be9mgyjp6jrbg75wk',
       name: 'TrollarVault Rep',
       trusted: true,
     },
@@ -406,3 +406,4 @@ export class RepresentativeService {
   ];
 
 }
+

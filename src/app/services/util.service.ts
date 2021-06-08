@@ -38,13 +38,13 @@ export class UtilService {
     getAccountPublicKey: getAccountPublicKey,
     setPrefix: setPrefix,
   };
-  nano = {
-    mnanoToRaw: mnanoToRaw,
-    knanoToRaw: knanoToRaw,
-    nanoToRaw: nanoToRaw,
-    rawToMnano: rawToMnano,
-    rawToKnano: rawToKnano,
-    rawToNano: rawToNano,
+  trollar = {
+    mtrollarToRaw: mtrollarToRaw,
+    ktrollarToRaw: ktrollarToRaw,
+    trollarToRaw: trollarToRaw,
+    rawToMtrollar: rawToMtrollar,
+    rawToKtrollar: rawToKtrollar,
+    rawToTrollar: rawToTrollar,
   };
 
 }
@@ -218,18 +218,18 @@ function getPublicAccountID(accountPublicKeyBytes, prefix = 'troll') {
 function getAccountPublicKey(account) {
   if (account.length == 64) {
     if(!account.startsWith('ttk_1') && !account.startsWith('ttk_3')) {
-      throw new Error(`Invalid NANO Account`);
+      throw new Error(`Invalid TROLLAR Account`);
     }
   } else if (account.length == 65) {
     if(!account.startsWith('troll_1') && !account.startsWith('troll_3')) {
-      throw new Error(`Invalid NANO Account`);
+      throw new Error(`Invalid TROLLAR Account`);
     }
   } else {
-    throw new Error(`Invalid NANO Account`);
+    throw new Error(`Invalid TROLLAR Account`);
   }
   const account_crop = account.length == 64 ? account.substring(4,64) : account.substring(5,65);
   const isValid = /^[13456789abcdefghijkmnopqrstuwxyz]+$/.test(account_crop);
-  if (!isValid) throw new Error(`Invalid NANO account`);
+  if (!isValid) throw new Error(`Invalid TROLLAR account`);
 
   const key_uint4 = array_crop(uint5ToUint4(stringToUint5(account_crop.substring(0, 52))));
   const hash_uint4 = uint5ToUint4(stringToUint5(account_crop.substring(52, 60)));
@@ -252,26 +252,26 @@ function setPrefix(account, prefix = 'ttk') {
 /**
  * Conversion functions
  */
-const mnano = 1000000000000000000000000000000;
-const knano = 1000000000000000000000000000;
-const nano  = 1000000000000000000000000;
-function mnanoToRaw(value) {
-  return new BigNumber(value).times(mnano);
+const mtrollar = 1000000000000000000000000000000;
+const ktrollar = 1000000000000000000000000000;
+const trollar  = 1000000000000000000000000;
+function mtrollarToRaw(value) {
+  return new BigNumber(value).times(mtrollar);
 }
-function knanoToRaw(value) {
-  return new BigNumber(value).times(knano);
+function ktrollarToRaw(value) {
+  return new BigNumber(value).times(ktrollar);
 }
-function nanoToRaw(value) {
-  return new BigNumber(value).times(nano);
+function trollarToRaw(value) {
+  return new BigNumber(value).times(trollar);
 }
-function rawToMnano(value) {
-  return new BigNumber(value).div(mnano);
+function rawToMtrollar(value) {
+  return new BigNumber(value).div(mtrollar);
 }
-function rawToKnano(value) {
-  return new BigNumber(value).div(knano);
+function rawToKtrollar(value) {
+  return new BigNumber(value).div(ktrollar);
 }
-function rawToNano(value) {
-  return new BigNumber(value).div(nano);
+function rawToTrollar(value) {
+  return new BigNumber(value).div(trollar);
 }
 
 
@@ -326,12 +326,12 @@ const util = {
     getAccountPublicKey: getAccountPublicKey,
     setPrefix: setPrefix,
   },
-  nano: {
-    mnanoToRaw: mnanoToRaw,
-    knanoToRaw: knanoToRaw,
-    nanoToRaw: nanoToRaw,
-    rawToMnano: rawToMnano,
-    rawToKnano: rawToKnano,
-    rawToNano: rawToNano,
+  trollar: {
+    mtrollarToRaw: mtrollarToRaw,
+    ktrollarToRaw: ktrollarToRaw,
+    trollarToRaw: trollarToRaw,
+    rawToMtrollar: rawToMtrollar,
+    rawToKtrollar: rawToKtrollar,
+    rawToTrollar: rawToTrollar,
   }
 };

@@ -19,7 +19,7 @@ export class RaiPipe implements PipeTransform {
     switch (denomination.toLowerCase()) {
       default:
       case 'xrb': return `${(value / this.mrai).toFixed(6)}${!hideText ? ' TROLLAR': ''}`;
-      case 'mnano':
+      case 'mtrollar':
         const hasRawValue = (value / this.rai) % 1;
         if (hasRawValue) {
           const newVal = value / this.mrai < 0.000001 ? 0 : value / this.mrai; // New more precise toFixed function, but bugs on huge raw numbers

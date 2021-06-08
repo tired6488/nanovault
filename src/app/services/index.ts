@@ -4,7 +4,7 @@ export * from './app-settings.service';
 export * from './desktop.service';
 export * from './ledger.service';
 export * from './modal.service';
-export * from './nano-block.service';
+export * from './trollar-block.service';
 export * from './node.service';
 export * from './notification.service';
 export * from './pow.service';

@@ -9,7 +9,7 @@ import {
   ApiService,
   AppSettingsService,
   FullRepresentativeOverview,
-  NanoBlockService,
+  TrollarBlockService,
   NotificationService,
   RepresentativeService,
   UtilService,
@@ -53,7 +53,7 @@ export class RepresentativesComponent implements OnInit {
     public wallet: WalletService,
     private api: ApiService,
     private notifications: NotificationService,
-    private nanoBlock: NanoBlockService,
+    private trollarBlock: TrollarBlockService,
     private util: UtilService,
     private http: HttpClient,
     private representativeService: RepresentativeService,
@@ -161,11 +161,11 @@ export class RepresentativesComponent implements OnInit {
       const totalSupply = new BigNumber(133248289);
 
       const reps = scores.map(rep => {
-        const nanoWeight = this.util.nano.rawToMnano(rep.votingweight.toString() || 0);
-        const percent = nanoWeight.div(totalSupply).times(100);
+        const trollarWeight = this.util.trollar.rawToMtrollar(rep.votingweight.toString() || 0);
+        const percent = trollarWeight.div(totalSupply).times(100);
 
-        // rep.weight = nanoWeight.toString(10);
-        rep.weight = this.util.nano.mnanoToRaw(nanoWeight);
+        // rep.weight = trollarWeight.toString(10);
+        rep.weight = this.util.trollar.mtrollarToRaw(trollarWeight);
         rep.percent = percent.toFixed(3);
 
         return rep;
@@ -249,7 +249,7 @@ export class RepresentativesComponent implements OnInit {
       if (!walletAccount) continue; // Unable to find account in the wallet? wat?
 
       try {
-        const changed = await this.nanoBlock.generateChange(walletAccount, newRep, this.wallet.isLedgerWallet());
+        const changed = await this.trollarBlock.generateChange(walletAccount, newRep, this.wallet.isLedgerWallet());
         if (!changed) {
           this.notifications.sendError(`Error changing representative for ${account.id}, please try again`);
         }

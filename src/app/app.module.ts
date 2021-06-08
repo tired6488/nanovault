@@ -28,13 +28,13 @@ import {WorkPoolService} from "./services/work-pool.service";
 import {ConfigureAppComponent} from "./components/configure-app/configure-app.component";
 import {AppSettingsService} from "./services/app-settings.service";
 import {WebsocketService} from "./services/websocket.service";
-import {NanoBlockService} from "./services/nano-block.service";
+import {TrollarBlockService} from "./services/trollar-block.service";
 import { AccountDetailsComponent } from './components/account-details/account-details.component';
 import { TransactionDetailsComponent } from './components/transaction-details/transaction-details.component';
 import {PriceService} from "./services/price.service";
 import { FiatPipe } from './pipes/fiat.pipe';
 import { ImportWalletComponent } from './components/import-wallet/import-wallet.component';
-import { NanoAccountIdComponent } from './components/helpers/nano-account-id/nano-account-id.component';
+import { TrollarAccountIdComponent } from './components/helpers/trollar-account-id/trollar-account-id.component';
 import {PowService} from "./services/pow.service";
 import { ImportAddressBookComponent } from './components/import-address-book/import-address-book.component';
 import { CurrencySymbolPipe } from './pipes/currency-symbol.pipe';
@@ -67,7 +67,7 @@ import { ChangeRepWidgetComponent } from './components/change-rep-widget/change-
     TransactionDetailsComponent,
     FiatPipe,
     ImportWalletComponent,
-    NanoAccountIdComponent,
+    TrollarAccountIdComponent,
     ImportAddressBookComponent,
     CurrencySymbolPipe,
     RepresentativesComponent,
@@ -93,7 +93,7 @@ import { ChangeRepWidgetComponent } from './components/change-rep-widget/change-
     WorkPoolService,
     AppSettingsService,
     WebsocketService,
-    NanoBlockService,
+    TrollarBlockService,
     PriceService,
     PowService,
     RepresentativeService,

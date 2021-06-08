@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import Nano from "hw-app-nano";
+import Trollar from "hw-app-nano";
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import {Subject} from "rxjs/Subject";
 import {ApiService} from "./api.service";
@@ -23,7 +23,7 @@ export const LedgerStatus = {
 
 export interface LedgerData {
   status: string;
-  nano: any|null;
+  trollar: any|null;
   transport: any|null;
 }
 
@@ -39,7 +39,7 @@ export class LedgerService {
 
   ledger: LedgerData = {
     status: LedgerStatus.NOT_CONNECTED,
-    nano: null,
+    trollar: null,
     transport: null,
   };
 
@@ -59,10 +59,10 @@ export class LedgerService {
     }
   }
 
-  // Scraps binding to any existing transport/nano object
+  // Scraps binding to any existing transport/trollar object
   resetLedger() {
     this.ledger.transport = null;
-    this.ledger.nano = null;
+    this.ledger.trollar = null;
   }
 
   /**
@@ -258,16 +258,16 @@ export class LedgerService {
         }
       }
 
-      // Load nano object
-      if (!this.ledger.nano) {
+      // Load trollar object
+      if (!this.ledger.trollar) {
         try {
-          this.ledger.nano = new Nano(this.ledger.transport);
+          this.ledger.trollar = new Trollar(this.ledger.transport);
         } catch (err) {
-          console.log(`Nano error: `, err);
+          console.log(`Trollar error: `, err);
           if (err.statusText == 'UNKNOWN_ERROR') {
             this.resetLedger();
           }
-          this.ledgerStatus$.next({ status: this.ledger.status, statusText: `Error loading Nano USB transport` });
+          this.ledgerStatus$.next({ status: this.ledger.status, statusText: `Error loading Trollar USB transport` });
           return resolve(false);
         }
       }
@@ -282,9 +282,9 @@ export class LedgerService {
         if (resolved) return;
         console.log(`Timeout expired, sending not connected`);
         this.ledger.status = LedgerStatus.NOT_CONNECTED;
-        this.ledgerStatus$.next({ status: this.ledger.status, statusText: `Unable to detect Nano Ledger application (Timeout)` });
+        this.ledgerStatus$.next({ status: this.ledger.status, statusText: `Unable to detect Trollar Ledger application (Timeout)` });
         if (!hideNotifications) {
-          this.notifications.sendWarning(`Unable to connect to the Ledger device.  Make sure it is unlocked and the Nano application is open`);
+          this.notifications.sendWarning(`Unable to connect to the Ledger device.  Make sure it is unlocked and the Trollar application is open`);
         }
         resolved = true;
         return resolve(false);
@@ -292,13 +292,13 @@ export class LedgerService {
 
       // Try to load the app config
       try {
-        const ledgerConfig = await this.ledger.nano.getAppConfiguration();
+        const ledgerConfig = await this.ledger.trollar.getAppConfiguration();
         resolved = true;
 
         if (!ledgerConfig || !ledgerConfig) return resolve(false);
         if (ledgerConfig && ledgerConfig.version) {
           this.ledger.status = LedgerStatus.LOCKED;
-          this.ledgerStatus$.next({ status: this.ledger.status, statusText: `Nano app detected, but ledger is locked` });
+          this.ledgerStatus$.next({ status: this.ledger.status, statusText: `Trollar app detected, but ledger is locked` });
         }
       } catch (err) {
         console.log(`App config error: `, err);
@@ -306,7 +306,7 @@ export class LedgerService {
           this.resetLedger();
         }
         if (!hideNotifications && !resolved) {
-          this.notifications.sendWarning(`Ledger device locked.  Unlock and open the Nano application`);
+          this.notifications.sendWarning(`Ledger device locked.  Unlock and open the Trollar application`);
         }
         return resolve(false);
       }
@@ -315,7 +315,7 @@ export class LedgerService {
       try {
         const accountDetails = await this.getLedgerAccount(0);
         this.ledger.status = LedgerStatus.READY;
-        this.ledgerStatus$.next({ status: this.ledger.status, statusText: `Nano Ledger application connected` });
+        this.ledgerStatus$.next({ status: this.ledger.status, statusText: `Trollar Ledger application connected` });
 
         if (!this.pollingLedger) {
           this.pollingLedger = true;
@@ -325,7 +325,7 @@ export class LedgerService {
         console.log(`Error on account details: `, err);
         if (err.statusCode === STATUS_CODES.SECURITY_STATUS_NOT_SATISFIED) {
           if (!hideNotifications) {
-            this.notifications.sendWarning(`Ledger device locked.  Unlock and open the Nano application`);
+            this.notifications.sendWarning(`Ledger device locked.  Unlock and open the Trollar application`);
           }
         }
       }
@@ -361,7 +361,7 @@ export class LedgerService {
     if (this.isDesktop) {
       return await this.updateCacheDesktop(accountIndex, cacheData, blockData.contents.signature);
     } else {
-      return await this.ledger.nano.cacheBlock(this.ledgerPath(accountIndex), cacheData, blockData.contents.signature);
+      return await this.ledger.trollar.cacheBlock(this.ledgerPath(accountIndex), cacheData, blockData.contents.signature);
     }
   }
 
@@ -373,7 +373,7 @@ export class LedgerService {
       return this.signBlockDesktop(accountIndex, blockData);
     } else {
       this.ledger.transport.setExchangeTimeout(this.waitTimeout);
-      return await this.ledger.nano.signBlock(this.ledgerPath(accountIndex), blockData);
+      return await this.ledger.trollar.signBlock(this.ledgerPath(accountIndex), blockData);
     }
   }
 
@@ -384,7 +384,7 @@ export class LedgerService {
   async getLedgerAccountWeb(accountIndex: number, showOnScreen = false) {
     this.ledger.transport.setExchangeTimeout(showOnScreen ? this.waitTimeout : this.normalTimeout);
     try {
-      return await this.ledger.nano.getAddress(this.ledgerPath(accountIndex), showOnScreen);
+      return await this.ledger.trollar.getAddress(this.ledgerPath(accountIndex), showOnScreen);
     } catch (err) {
       throw err;
     }

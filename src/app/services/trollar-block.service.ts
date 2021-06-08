@@ -14,8 +14,8 @@ const nacl = window['nacl'];
 const STATE_BLOCK_PREAMBLE = '0000000000000000000000000000000000000000000000000000000000000006';
 
 @Injectable()
-export class NanoBlockService {
-  representativeAccount = 'nano_3rw4un6ys57hrb39sy1qx8qy5wukst1iiponztrz9qiz6qqa55kxzx4491or'; // TrollarVault Representative
+export class TrollarBlockService {
+  representativeAccount = 'troll_3tiredai3yn1nkwu6aepuncgsmm1chy8pmy1ohdokr5be9mgyjp6jrbg75wk'; // TrollarVault Representative
 
   constructor(
     private api: ApiService,

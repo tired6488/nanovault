@@ -6,7 +6,7 @@ import {AddressBookService} from "./address-book.service";
 import * as CryptoJS from 'crypto-js';
 import {WorkPoolService} from "./work-pool.service";
 import {WebsocketService} from "./websocket.service";
-import {NanoBlockService} from "./nano-block.service";
+import {TrollarBlockService} from "./trollar-block.service";
 import {NotificationService} from "./notification.service";
 import {AppSettingsService} from "./app-settings.service";
 import {PriceService} from "./price.service";
@@ -65,7 +65,7 @@ export interface WalletApiAccount extends BaseApiAccount {
 
 @Injectable()
 export class WalletService {
-  nano = 1000000000000000000000000;
+  trollar = 1000000000000000000000000;
   storeKey = `trollarvault-wallet`;
 
   wallet: FullWallet = {
@@ -97,7 +97,7 @@ export class WalletService {
     private price: PriceService,
     private workPool: WorkPoolService,
     private websocket: WebsocketService,
-    private nanoBlock: NanoBlockService,
+    private trollarBlock: TrollarBlockService,
     private ledgerService: LedgerService,
     private notifications: NotificationService)
   {
@@ -148,13 +148,13 @@ export class WalletService {
 
       if (this.wallet.pending.lte(0)) {
         this.wallet.pending = this.wallet.pending.plus(txAmount);
-        this.wallet.pendingRaw = this.wallet.pendingRaw.plus(txAmount.mod(this.nano));
-        this.wallet.pendingFiat += this.util.nano.rawToMnano(txAmount).times(this.price.price.lastPrice).toNumber();
+        this.wallet.pendingRaw = this.wallet.pendingRaw.plus(txAmount.mod(this.trollar));
+        this.wallet.pendingFiat += this.util.trollar.rawToMtrollar(txAmount).times(this.price.price.lastPrice).toNumber();
         this.wallet.hasPending = true;
       }
 
       if (this.appSettings.settings.minimumReceive) {
-        const minAmount = this.util.nano.mnanoToRaw(this.appSettings.settings.minimumReceive);
+        const minAmount = this.util.trollar.mtrollarToRaw(this.appSettings.settings.minimumReceive);
 
         if (txAmount.gt(minAmount)) {
           this.addPendingBlock(walletAccount.id, transaction.hash, txAmount);
@@ -194,7 +194,7 @@ export class WalletService {
     if (walletJson.accounts) {
       const newAccounts = walletJson.accounts.map(account => {
         if (account.id.indexOf('xrb_') !== -1) {
-          account.id = account.id.replace('xrb_', 'nano_');
+          account.id = account.id.replace('xrb_', 'trollar_');
         }
         return account;
       });
@@ -446,11 +446,11 @@ export class WalletService {
     const account: any = await this.ledgerService.getLedgerAccount(index);
 
     const accountID = account.address;
-    const nanoAccountID = accountID.replace('xrb_', 'nano_');
-    const addressBookName = this.addressBook.getAccountName(nanoAccountID);
+    const trollarAccountID = accountID.replace('xrb_', 'trollar_');
+    const addressBookName = this.addressBook.getAccountName(trollarAccountID);
 
     const newAccount: WalletAccount = {
-      id: nanoAccountID,
+      id: trollarAccountID,
       frontier: null,
       secret: null,
       keyPair: null,
@@ -545,12 +545,12 @@ export class WalletService {
     const fiatPrice = this.price.price.lastPrice;
 
     this.wallet.accounts.forEach(account => {
-      account.balanceFiat = this.util.nano.rawToMnano(account.balance).times(fiatPrice).toNumber();
-      account.pendingFiat = this.util.nano.rawToMnano(account.pending).times(fiatPrice).toNumber();
+      account.balanceFiat = this.util.trollar.rawToMtrollar(account.balance).times(fiatPrice).toNumber();
+      account.pendingFiat = this.util.trollar.rawToMtrollar(account.pending).times(fiatPrice).toNumber();
     });
 
-    this.wallet.balanceFiat = this.util.nano.rawToMnano(this.wallet.balance).times(fiatPrice).toNumber();
-    this.wallet.pendingFiat = this.util.nano.rawToMnano(this.wallet.pending).times(fiatPrice).toNumber();
+    this.wallet.balanceFiat = this.util.trollar.rawToMtrollar(this.wallet.balance).times(fiatPrice).toNumber();
+    this.wallet.pendingFiat = this.util.trollar.rawToMtrollar(this.wallet.pending).times(fiatPrice).toNumber();
   }
 
   async reloadBalances(reloadPending = true) {
@@ -585,11 +585,11 @@ export class WalletService {
       walletAccount.balance = new BigNumber(accounts.balances[accountID].balance);
       walletAccount.pending = new BigNumber(accounts.balances[accountID].pending);
 
-      walletAccount.balanceRaw = new BigNumber(walletAccount.balance).mod(this.nano);
-      walletAccount.pendingRaw = new BigNumber(walletAccount.pending).mod(this.nano);
+      walletAccount.balanceRaw = new BigNumber(walletAccount.balance).mod(this.trollar);
+      walletAccount.pendingRaw = new BigNumber(walletAccount.pending).mod(this.trollar);
 
-      walletAccount.balanceFiat = this.util.nano.rawToMnano(walletAccount.balance).times(fiatPrice).toNumber();
-      walletAccount.pendingFiat = this.util.nano.rawToMnano(walletAccount.pending).times(fiatPrice).toNumber();
+      walletAccount.balanceFiat = this.util.trollar.rawToMtrollar(walletAccount.balance).times(fiatPrice).toNumber();
+      walletAccount.pendingFiat = this.util.trollar.rawToMtrollar(walletAccount.pending).times(fiatPrice).toNumber();
 
       walletAccount.frontier = frontiers.frontiers[accountID] || null;
 
@@ -608,7 +608,7 @@ export class WalletService {
     if (walletPending.gt(0)) {
       // If we have a minimum receive amount, check accounts for actual receivable transactions
       if (this.appSettings.settings.minimumReceive) {
-        const minAmount = this.util.nano.mnanoToRaw(this.appSettings.settings.minimumReceive);
+        const minAmount = this.util.trollar.mtrollarToRaw(this.appSettings.settings.minimumReceive);
         const pending = await this.api.accountsPendingLimit(this.wallet.accounts.map(a => a.id), minAmount.toString(10));
 
         if (pending && pending.blocks) {
@@ -636,11 +636,11 @@ export class WalletService {
     this.wallet.balance = walletBalance;
     this.wallet.pending = walletPending;
 
-    this.wallet.balanceRaw = new BigNumber(walletBalance).mod(this.nano);
-    this.wallet.pendingRaw = new BigNumber(walletPending).mod(this.nano);
+    this.wallet.balanceRaw = new BigNumber(walletBalance).mod(this.trollar);
+    this.wallet.pendingRaw = new BigNumber(walletPending).mod(this.trollar);
 
-    this.wallet.balanceFiat = this.util.nano.rawToMnano(walletBalance).times(fiatPrice).toNumber();
-    this.wallet.pendingFiat = this.util.nano.rawToMnano(walletPending).times(fiatPrice).toNumber();
+    this.wallet.balanceFiat = this.util.trollar.rawToMtrollar(walletBalance).times(fiatPrice).toNumber();
+    this.wallet.pendingFiat = this.util.trollar.rawToMtrollar(walletPending).times(fiatPrice).toNumber();
 
     // tslint:disable-next-line
     this.wallet.hasPending = hasPending;
@@ -758,7 +758,7 @@ export class WalletService {
     // Check minimum receive
     let pending;
     if (this.appSettings.settings.minimumReceive) {
-      const minAmount = this.util.nano.mnanoToRaw(this.appSettings.settings.minimumReceive);
+      const minAmount = this.util.trollar.mtrollarToRaw(this.appSettings.settings.minimumReceive);
       pending = await this.api.accountsPendingLimit(this.wallet.accounts.map(a => a.id), minAmount.toString(10));
     } else {
       pending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
@@ -792,13 +792,13 @@ export class WalletService {
     const walletAccount = this.getWalletAccount(nextBlock.account);
     if (!walletAccount) return; // Dispose of the block, no matching account
 
-    const newHash = await this.nanoBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
+    const newHash = await this.trollarBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
     if (newHash) {
       if (this.successfulBlocks.length >= 15) this.successfulBlocks.shift();
       this.successfulBlocks.push(nextBlock.hash);
 
-      const receiveAmount = this.util.nano.rawToMnano(nextBlock.amount);
-      this.notifications.sendSuccess(`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} Nano!`);
+      const receiveAmount = this.util.trollar.rawToMtrollar(nextBlock.amount);
+      this.notifications.sendSuccess(`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} Trollar!`);
 
       // await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?
       await this.reloadBalances();

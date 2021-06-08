@@ -26,15 +26,15 @@ export class AppSettingsService {
   storeKey = `trollarvault-appsettings`;
 
   settings: AppSettings = {
-    displayDenomination: 'mnano',
-    // displayPrefix: 'xrb',
+    displayDenomination: 'mtrollar',
+    // displayPrefix: 'ttk',
     walletStore: 'localStorage',
     displayCurrency: 'USD',
     defaultRepresentative: null,
     lockOnClose: 1,
     lockInactivityMinutes: 30,
     powSource: 'best',
-    serverName: 'nanovault',
+    serverName: 'trollarvault',
     serverAPI: null,
     serverNode: null,
     serverWS: null,
@@ -80,15 +80,15 @@ export class AppSettingsService {
   clearAppSettings() {
     localStorage.removeItem(this.storeKey);
     this.settings = {
-      displayDenomination: 'mnano',
-      // displayPrefix: 'xrb',
+      displayDenomination: 'mtrollar',
+      // displayPrefix: 'ttk',
       walletStore: 'localStorage',
       displayCurrency: 'USD',
       defaultRepresentative: null,
       lockOnClose: 1,
       lockInactivityMinutes: 30,
       powSource: 'best',
-      serverName: 'nanovault',
+      serverName: 'trollarvault',
       serverNode: null,
       serverAPI: null,
       serverWS: null,
